@@ -2,6 +2,12 @@
   "plugins": {
     "pstack": {
       "enabled": true
+    },
+    "compound-engineering": {
+      "enabled": true
+    },
+    "mattpocock-skills": {
+      "enabled": true
     }
   }
 }

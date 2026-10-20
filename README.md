@@ -1,23 +1,36 @@
 # Agent factory (Cursor)
 
-A **GitHub template** for a local agent factory in the **Cursor app**: Composer chat, **Grok** (or inherit-parent), pstack `/poteto-mode` as the builder, and a `verify-*` skill as proof.
+A **GitHub template** for a local agent factory in the **Cursor app**. It **mixes three plugins**:
 
-It is not Warp Factories and not a Compound Engineering `/lfg` pipeline. One work item, one foreman, one primary skill per stage.
+| Plugin | Job |
+|---|---|
+| [Compound Engineering](https://github.com/EveryInc/compound-engineering-plugin) | Plan + compound memory |
+| [Matt Pocock skills](https://github.com/mattpocock/skills) | Domain, tickets, TDD seams |
+| [pstack](https://github.com/cursor/plugins) | `/poteto-mode` builder + `verify-*` proof |
+
+Composer chat, **Grok** (or inherit-parent). One work item, one foreman, one primary skill per stage. `/lfg` and Matt `/implement` are not the factory.
 
 ## You need
 
 - [Cursor](https://cursor.com) with **Composer**
-- [pstack](https://github.com/cursor/plugins) plugin (`/add-plugin pstack`)
-- Grok available on your Cursor account (or Auto that you are happy to inherit)
+- All three plugins:
 
-Compound Engineering and Matt Pocock skills are optional later.
+```text
+/add-plugin pstack
+/add-plugin compound-engineering
+/add-plugin mattpocock-skills
+```
+
+- Grok available on your Cursor account (or Auto you are happy to inherit)
 
 ## New project
 
 1. Use this repository as a GitHub template (or clone it).
-2. In Cursor, open the folder, enable pstack, start a **Composer** chat on Grok.
-3. `/setup-factory` — keep the Notes sample, or eject it and point verify at your app.
-4. `/factory-foreman` plus a goal and a check that can pass or fail.
+2. Open the folder in Cursor. Enable the three plugins (this repo’s `.cursor/settings.json` already turns them on once installed).
+3. Start a **Composer** chat on Grok.
+4. `/setup-factory` — keep the Notes sample, or eject it.
+5. Optional follow-ups: `/ce-setup`, `/setup-matt-pocock-skills`.
+6. `/factory-foreman` plus a goal and a check that can pass or fail.
 
 The sample app lives in `samples/notes`. From that directory:
 
@@ -42,11 +55,12 @@ Do not overwrite an existing `verify-<app>` without asking. pstack `/create-veri
 ## Layout
 
 ```text
-.cursor/skills/factory-foreman/   # routing
+.cursor/skills/factory-foreman/   # routing across CE + Matt + pstack
 .cursor/skills/setup-factory/     # one-time setup
 .cursor/skills/verify-app/        # stubs
 .cursor/skills/verify-notes/      # sample proof
 .cursor/rules/factory.mdc
+.cursor/settings.json             # enables all three plugins
 .factory/                         # config + schema + work items
 samples/notes/                    # deletable demo
 AGENTS.md

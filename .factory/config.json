@@ -3,5 +3,6 @@
   "verifySkill": "verify-notes",
   "builder": "poteto-mode",
   "host": "cursor-composer",
-  "models": "inherit-parent"
+  "models": "inherit-parent",
+  "plugins": ["pstack", "compound-engineering", "mattpocock-skills"]
 }
