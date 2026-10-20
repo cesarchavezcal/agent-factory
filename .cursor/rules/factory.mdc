@@ -6,12 +6,12 @@ alwaysApply: true
 This repo is a **Cursor factory** (Composer chat, Grok / inherit-parent models).
 
 - One work item per request. State lives in `.factory/work-items/` (do not commit instances unless asked).
-- Foreman: `.cursor/skills/factory-foreman/SKILL.md`. Setup: `/setup-factory` if `.factory/config.json` is missing.
+- Foreman: `.cursor/skills/factory-foreman/SKILL.md`. **Autonomy is `full`:** chain intake → plan → build → verify → PR in one run. Do not pause for spec signoff or “should I continue?”
 - Mix three plugins: **CE** (plan + memory), **Matt** (domain + tickets + TDD seams), **pstack** (build + proof).
 - One primary skill per stage. Nested skills are tools inside that stage.
 - **Building** is pstack `/poteto-mode`. Do not also run `/lfg` or Matt `/implement` on the same item.
-- Matt `/tdd` is seam discipline inside the playbook, not a second builder.
+- Matt `/tdd` is seam discipline inside the playbook, not a second builder. Skip blocking `/grill-with-docs` / `/ce-brainstorm` under `full`.
 - Proof is the configured `verify-*` skill. Do not declare done from self-report.
 - After a durable lesson: CE `/ce-compound`. Recurring agent mistakes: pstack `/correct`.
-- Merge is the human's call. Complete the work item only after merge or explicit confirmation.
+- Human gate is **merge only** (`humanGates: ["merge"]`). Stop for merge, failed proof after one repair, or irreversible actions.
 - pstack subagents: `inherit-parent` unless the user ran `/setup-pstack` with other slugs.

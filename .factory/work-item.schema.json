@@ -40,9 +40,13 @@
       "type": "array",
       "items": { "type": "string" }
     },
+    "decisions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "waitingOn": {
       "type": "string",
-      "enum": ["none", "spec", "question", "merge"]
+      "enum": ["none", "merge", "blocked"]
     }
   }
 }

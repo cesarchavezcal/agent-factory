@@ -4,7 +4,7 @@ Cursor app. Factory chats use **Composer**. Prefer **Grok**, or let pstack subag
 
 ## Factory
 
-One work item. One orchestrator (`/factory-foreman`). Config: `.factory/config.json`.
+One work item. One orchestrator (`/factory-foreman`). Config: `.factory/config.json`. **`autonomy: full`** — the foreman chains every stage in one run and only waits on **merge** (or a hard blocker).
 
 Mix **three plugins** — not three factories:
 

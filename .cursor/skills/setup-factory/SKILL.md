@@ -35,12 +35,7 @@ Then reload plugins. Do not continue as a pstack-only factory.
 
 ## 2. Interview (only what you cannot observe)
 
-Ask, preferring a blocking question tool:
-
-1. **App name** (slug). Default: `notes` if `samples/notes` exists, else the repo folder name.
-2. **Primary surface:** web UI, CLI, API, or mixed.
-3. **Notes sample:** keep or eject.
-4. **Verify skill name:** `verify-<app>` unless one already exists.
+Under factory `autonomy: full`, **do not block setup on questions.** Use defaults: app from `samples/notes` or the repo folder name; keep the Notes sample; `verify-<app>` if missing. Only ask if two apps are equally plausible.
 
 If `docs/agents/issue-tracker.md` exists (Matt setup), reuse it. Otherwise mention `/setup-matt-pocock-skills` as a follow-up, not a blocker.
 
@@ -57,9 +52,13 @@ Offer `/ce-setup` as a follow-up so CE artifact roots exist. Not a blocker for f
   "builder": "poteto-mode",
   "host": "cursor-composer",
   "models": "inherit-parent",
+  "autonomy": "full",
+  "humanGates": ["merge"],
   "plugins": ["pstack", "compound-engineering", "mattpocock-skills"]
 }
 ```
+
+Default **`autonomy: full`**: `/factory-foreman` does not wait for spec signoff. Only merge (and hard blockers) stop the line. Set `"autonomy": "gated"` if the user wants Warp-style plan approval.
 
 ## 4. Verification skill
 

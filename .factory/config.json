@@ -4,5 +4,7 @@
   "builder": "poteto-mode",
   "host": "cursor-composer",
   "models": "inherit-parent",
+  "autonomy": "full",
+  "humanGates": ["merge"],
   "plugins": ["pstack", "compound-engineering", "mattpocock-skills"]
 }

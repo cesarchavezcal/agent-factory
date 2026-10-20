@@ -8,7 +8,7 @@ A **GitHub template** for a local agent factory in the **Cursor app**. It **mixe
 | [Matt Pocock skills](https://github.com/mattpocock/skills) | Domain, tickets, TDD seams |
 | [pstack](https://github.com/cursor/plugins) | `/poteto-mode` builder + `verify-*` proof |
 
-Composer chat, **Grok** (or inherit-parent). One work item, one foreman, one primary skill per stage. `/lfg` and Matt `/implement` are not the factory.
+Composer chat, **Grok** (or inherit-parent). One work item, one foreman. **`autonomy: full`** (default): `/factory-foreman` runs intake → CE plan → pstack build → verify → PR without asking you to continue. You only merge. `/lfg` and Matt `/implement` are not the factory.
 
 ## You need
 
@@ -30,7 +30,7 @@ Composer chat, **Grok** (or inherit-parent). One work item, one foreman, one pri
 3. Start a **Composer** chat on Grok.
 4. `/setup-factory` — keep the Notes sample, or eject it.
 5. Optional follow-ups: `/ce-setup`, `/setup-matt-pocock-skills`.
-6. `/factory-foreman` plus a goal and a check that can pass or fail.
+6. `/factory-foreman` plus a goal. It should run the whole line and stop at an open PR (or a blocker). You merge.
 
 The sample app lives in `samples/notes`. From that directory:
 

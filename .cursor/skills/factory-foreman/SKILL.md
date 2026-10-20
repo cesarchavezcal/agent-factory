@@ -1,74 +1,80 @@
 ---
 name: factory-foreman
-description: Route one work item through the local Cursor factory mixing Compound Engineering, Matt Pocock skills, and pstack. Use for /factory-foreman, /factory, or "run this through the factory". Cursor Composer + Grok. Default builder is pstack /poteto-mode.
+description: Autonomously run one work item through the local Cursor factory (CE + Matt + pstack) with minimal human interaction. Use for /factory-foreman, /factory, or "run this through the factory". Stops only for merge or a hard blocker. Builder is pstack /poteto-mode.
 ---
 
 # Factory foreman
 
-You are the factory foreman in this Cursor chat (Composer). One **work item** keeps its identity from intake to handoff. You pick the **stage** and name **one** primary skill. Nested skills are tools inside that station, not competing pipelines.
+You are the factory foreman in this Cursor chat (Composer). Drive **one work item** from intake to an open PR **in this same turn sequence**. Do not pause for spec approval. Do not interview the user. Ask only at a hard blocker.
 
-**Plugins (all required):** Compound Engineering, Matt Pocock skills, pstack. Parent chat is Composer. Prefer Grok or `inherit-parent` for subagents.
+**Plugins (all required):** Compound Engineering, Matt Pocock skills, pstack. Prefer Grok or `inherit-parent`.
+
+## Autonomy (default)
+
+Read `.factory/config.json`. `autonomy` defaults to `full`.
+
+| `autonomy` | Behavior |
+|---|---|
+| `full` (default) | Chain every stage without waiting. Record reversible choices on the work item. Human gate is **merge only**. |
+| `gated` | Also wait for spec signoff (legacy Warp default). |
+
+**Hard blockers (stop, set `status: blocked`, `waitingOn` accordingly):**
+
+- Missing config, plugins, or `verify-*` and you cannot create them without inventing the app
+- Dual orchestrator would run (`/lfg` or Matt `/implement` alongside `/poteto-mode`)
+- Destructive or irreversible action (merge, force-push, delete data) without explicit grant
+- Proof failed after one repair pass
+- Credentials, network, or permissions you cannot obtain
+
+**Not blockers:** unclear product wording, extra features, review nits. Pick the smaller reversible interpretation, write it on the work item under `decisions`, continue.
+
+If `.factory/config.json` is missing, run `/setup-factory` with defaults (keep sample, app `notes`) and continue. Do not stop to ask.
 
 ## Layers
 
 | Pack | Owns |
 |---|---|
-| **CE** | Product intent and memory: `/ce-brainstorm`, `/ce-plan`, `docs/plans/`, `/ce-compound` |
-| **Matt** | Domain and tickets: `/grill-with-docs`, `CONTEXT.md`, ADRs, `/to-spec`, `/to-tickets`, `/tdd` seams |
-| **pstack** | Building and proof: `/poteto-mode`, `verify-*`, `/interrogate`, `/blast-radius` |
+| **CE** | `/ce-plan` (not interactive `/ce-brainstorm` in `full`). `/ce-compound` after ship if the lesson is durable |
+| **Matt** | `/diagnosing-bugs`, `/to-tickets` when the plan is large. `/tdd` seams inside building. Skip `/grill-with-docs` in `full` (it blocks on Q&A) |
+| **pstack** | `/poteto-mode`, `verify-*`, `/interrogate` |
 
 ## One rule
 
-Never start `/lfg`, `/poteto-mode`, and Matt `/implement` on the same work item. Building is **pstack `/poteto-mode`**. `/lfg` is a CE-only bypass of the factory. Matt `/implement` is Matt’s builder; this factory does not use it.
-
-If `.factory/config.json` is missing, run `/setup-factory` first and stop.
+Never start `/lfg`, `/poteto-mode`, and Matt `/implement` on the same item. Building is **pstack `/poteto-mode`**.
 
 ## Work item
 
-Create or load `.factory/work-items/<id>.json` from `.factory/work-item.schema.json`. Use a short slug plus date (`create-note-2026-10-20`). Record `stage`, `primarySkill`, `planPath`, `verifySkill` (from config), `evidenceDir`, `blockers`, `status`.
+Create `.factory/work-items/<id>.json` immediately (slug + date). Update it **after every stage**. Fields: `stage`, `primarySkill`, `planPath`, `verifySkill`, `evidenceDir`, `blockers`, `status`, `waitingOn` (`none` until handoff, then `merge`).
 
-Do not commit work-item JSON unless the user asks.
+Do not commit work-item JSON unless the user asked.
 
-## Stages (shortest path)
+## Autonomous loop
 
-Skip a stage when it is already satisfied. Start partway. Send work back on revision.
-
-| Stage | Primary skill | Support (same stage) | Skip when |
-|---|---|---|---|
-| Intake | Create the work item | Matt `/triage` for incoming bugs/requests you did not write. CE `/ce-sweep` for leftover repo work | Already has an id |
-| Triage | Matt `/diagnosing-bugs` if broken; pstack `/how` + `/why` if “how/why is this code” | Matt `/research`. pstack `/in-your-own-words` | Problem and change are already named |
-| Planning | CE `/ce-brainstorm` then `/ce-plan` | Matt `/grill-with-docs` / `/domain-modeling` if terms are fuzzy. Matt `/to-spec` + `/to-tickets` for tracer-bullet tickets. Matt `/wayfinder` only when bigger than one session (decisions, not code). pstack `/sharpen`, `/architect` | Small, well-understood change |
-| Building | **pstack `/poteto-mode`** | Matt `/tdd` as seam discipline inside the playbook. Configured `verify-*` | — |
-| Reviewing | pstack `/interrogate` + `/blast-radius` | Matt `/code-review` (Standards + Spec) when a ticket/spec exists. Keep `verify-*` green | Tiny mechanical diff: skip panels, keep verify |
-| Handoff | CE `/ce-commit-push-pr` or pstack Opening a PR | Matt `/handoff` if the thread must fork. **You do not merge** | Local-only, no remote |
-| Complete | Merge or explicit user confirmation | CE `/ce-compound` if the lesson is durable | Cancelled |
-
-Human gates: **spec signoff** before Building when a plan exists; **ask** when requirements or review findings are ambiguous; **merge** is the user's call.
-
-## Routing
+Run these in order. Skip a stage only when it is already satisfied. Do not return control to the user between stages.
 
 ```text
-on(work_item)
-  if dual_orchestrator: refuse
-  if foggy_multi_session: Matt /wayfinder → CE /ce-plan
-  else if incoming_pile: Matt /triage
-  else if terms_unclear: Matt /grill-with-docs → CE /ce-plan
-  else if named_feature: CE /ce-plan
-  else if hard_bug: diagnose once → pstack bug-fix
-  wait(spec_gate) unless skip_planning
+on(request)
+  load config (autonomy: full)
+  create work_item
+  triage once (Matt diagnosing-bugs OR pstack how/why — not both)
+  if plan needed: CE /ce-plan  (write docs/plans, no human signoff)
+  if plan is multi-ticket: Matt /to-tickets then build ticket-by-ticket
   pstack /poteto-mode
-  verify-* + /interrogate
-  open_pr
-  wait(human_merge)
-  maybe CE /ce-compound
+  run verifySkill; capture artifacts
+  if verify fail: one /poteto-mode repair; if still fail: block
+  /interrogate (advisory); apply only cheap safe fixes
+  open PR (or local commits if no remote)
+  waitingOn: merge
+  maybe /ce-compound
+  stop  // human merges
 ```
 
-Do not diagnose twice. Do not `/implement` off a wayfinder map — collapse to `/ce-plan` first.
+Do not diagnose twice. Do not `/implement` off a wayfinder map. In `full`, skip `/wayfinder` unless the request is explicitly multi-session fog; then write a short CE plan instead of a ticket map that needs a human to pick tickets.
 
 ## Proof
 
-Read `.factory/config.json` for `verifySkill`. Drive the real user path. Artifacts under `artifacts/<work-item-id>/`. Cleanup must not delete evidence.
+Configured `verifySkill`. Real user path. Evidence under `artifacts/<work-item-id>/`. Cleanup must not delete evidence. **No evidence → not done.**
 
-## Reply
+## Reply (once, at the end)
 
-End with: work item id, current stage, primary skill used, evidence paths, what is waiting on the human.
+Work item id, stages run, plan path, evidence paths, PR URL (or why local-only), **waiting on merge**. Do not ask “should I continue?”

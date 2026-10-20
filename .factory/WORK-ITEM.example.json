@@ -10,5 +10,6 @@
   "verifySkill": "verify-notes",
   "evidenceDir": "artifacts/create-note-example",
   "blockers": [],
+  "decisions": [],
   "waitingOn": "none"
 }
