@@ -1,0 +1,14 @@
+{
+  "id": "create-note-example",
+  "source": "chat",
+  "stage": "building",
+  "status": "open",
+  "builder": "poteto-mode",
+  "primarySkill": "poteto-mode",
+  "planPath": "",
+  "ticketIds": [],
+  "verifySkill": "verify-notes",
+  "evidenceDir": "artifacts/create-note-example",
+  "blockers": [],
+  "waitingOn": "none"
+}

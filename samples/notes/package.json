@@ -1,0 +1,19 @@
+{
+  "name": "notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "notes": "./bin/notes.js"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "control-notes": "node scripts/control-notes.mjs"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "playwright": "^1.51.0"
+  }
+}

@@ -1,0 +1,8 @@
+node_modules/
+.verify/
+artifacts/
+.factory/work-items/*.json
+!/.factory/work-items/.gitkeep
+.DS_Store
+.env
+.env.*

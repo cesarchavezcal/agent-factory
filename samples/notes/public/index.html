@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="toolbar">
+      <h1 class="app-title">Notes</h1>
+      <div class="toolbar-actions">
+        <button type="button" id="new-note">New note</button>
+        <button type="button" id="search-open">Search</button>
+        <a href="#" id="all-notes" role="link">All notes</a>
+      </div>
+    </header>
+    <main id="main">
+      <section id="list-view" aria-labelledby="list-heading">
+        <h2 id="list-heading">Recent notes</h2>
+        <ul id="note-list"></ul>
+      </section>
+      <form id="editor" role="form" aria-label="Note editor" hidden>
+        <h2 id="editor-heading">New note</h2>
+        <label>
+          Title
+          <input type="text" name="title" aria-label="Title" />
+        </label>
+        <label>
+          Body
+          <textarea name="body" aria-label="Body" rows="6"></textarea>
+        </label>
+        <div class="editor-actions">
+          <button type="submit" id="save-note" disabled>Save note</button>
+          <button type="button" id="cancel-note">Cancel</button>
+        </div>
+      </form>
+      <div id="status" role="status" aria-live="polite"></div>
+    </main>
+    <dialog id="search-dialog" aria-label="Search notes">
+      <form method="dialog" id="search-form">
+        <label>
+          Search notes
+          <input
+            type="search"
+            name="query"
+            aria-label="Search notes"
+            role="searchbox"
+          />
+        </label>
+        <section aria-label="Search results">
+          <h2>Search results</h2>
+          <ul id="search-results"></ul>
+          <p id="search-empty" hidden>No notes match that query.</p>
+        </section>
+        <button type="submit" value="close">Close</button>
+      </form>
+    </dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

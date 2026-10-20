@@ -1,0 +1,7 @@
+{
+  "app": "notes",
+  "verifySkill": "verify-notes",
+  "builder": "poteto-mode",
+  "host": "cursor-composer",
+  "models": "inherit-parent"
+}
